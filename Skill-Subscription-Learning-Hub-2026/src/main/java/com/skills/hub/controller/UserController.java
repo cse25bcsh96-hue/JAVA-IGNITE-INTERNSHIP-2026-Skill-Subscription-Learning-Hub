@@ -23,51 +23,46 @@ public class UserController {
 
     @GetMapping("/register")
     public String showRegisterPage() {
-
-        // =========================
-        // TASK
-        // =========================
         // STEP 1: Return register page
-
-        return null; // TODO: "register"
+        return "register";
     }
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user) {
-
-        // =========================
-        //TASK
-        // =========================
         // STEP 1: call service.registerUser(user)
-        // STEP 2: if success → redirect to login
-        // STEP 3: else → stay on register page
+        boolean success = userService.registerUser(user);
 
-        return null;
+        // STEP 2: if success → redirect to login
+        if (success) {
+            return "redirect:/login";
+        }
+
+        // STEP 3: else → stay on register page
+        return "register";
     }
 
     @GetMapping("/login")
     public String showLoginPage() {
-
         // STEP 1: return login page
-
-        return null; // TODO: "login"
+        return "login";
     }
 
     @PostMapping("/login")
     public String login(@RequestParam String email,
-                         @RequestParam String password) {
-
-        // =========================
-        // PSEUDO CODE
-        // =========================
+                        @RequestParam String password) {
         // STEP 1: call userService.login(email, password)
-        // STEP 2: if user != null → redirect /packs
-        // STEP 3: else → return login page again
+        User user = userService.login(email, password);
 
-        return null;
+        // STEP 2: if user != null → redirect /packs
+        if (user != null) {
+            return "redirect:/packs";
+        }
+
+        // STEP 3: else → return login page again
+        return "login";
     }
 
-	public UserService getUserService() {
-		return userService;
-	}
+    public UserService getUserService() {
+        return userService;
+    }
 }
