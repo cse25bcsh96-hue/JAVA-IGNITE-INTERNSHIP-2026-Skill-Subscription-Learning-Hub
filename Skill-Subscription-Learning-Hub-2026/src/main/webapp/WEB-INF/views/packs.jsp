@@ -46,7 +46,7 @@ User - logs in -views packs - selects a plan
             <h4>${pack.title}</h4>
 
             <!--  show description -->
-            <p>${pack.description}</p>
+				            <p>${pack.description}</p>
 
             <!--  show price -->
             <b>₹ ${pack.price}</b>
