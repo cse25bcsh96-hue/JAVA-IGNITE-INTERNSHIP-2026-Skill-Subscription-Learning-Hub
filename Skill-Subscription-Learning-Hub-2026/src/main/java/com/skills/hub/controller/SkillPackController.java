@@ -1,70 +1,39 @@
-package com.skills.hub.controller;
+package com.skills.hub.service;
 
 import com.skills.hub.model.SkillPack;
-import com.skills.hub.service.SkillPackService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import com.skills.hub.repository.SkillPackRepository;
+import org.springframework.stereotype.Service;
 
-/*
-=========================================================
-WHAT IS THIS FILE?
-Handles skill pack (course) operations
-=========================================================
-*/
+import java.util.List;
 
-@Controller
-public class SkillPackController {
+@Service
+public class SkillPackService {
 
-    private final SkillPackService packService;
+    private final SkillPackRepository packRepository;
 
-    public SkillPackController(SkillPackService packService) {
-        this.packService = packService;
+    public SkillPackService(SkillPackRepository packRepository) {
+        this.packRepository = packRepository;
     }
 
-    @GetMapping("/packs")
-    public String viewPacks(Model model) {
-
-        // =========================
-        // TASK
-        // =========================
-        // STEP 1: list = packService.getAllPacks()
-        // STEP 2: model.addAttribute("packs", list)
-        // STEP 3: return packs.jsp
-
-        return null;
+    // Get all skill packs
+    public List<SkillPack> getAllPacks() {
+        return packRepository.findAll();
     }
 
-    @GetMapping("/add-pack")
-    public String showAddPackPage() {
-
-        // STEP 1: return add-pack page
-
-        return null;
+    // Add a new skill pack
+    public void addSkillPack(SkillPack pack) {
+        packRepository.save(pack);
     }
 
-    @PostMapping("/add-pack")
-    public String addPack(@ModelAttribute SkillPack pack) {
-
-        // =========================
-        // TASK
-        // =========================
-        // STEP 1: call packService.addSkillPack(pack)
-        // STEP 2: redirect /packs
-
-        return null;
+    // Delete a skill pack by ID
+    public void deleteSkillPack(Long id) {
+        packRepository.deleteById(id);
     }
+}
+package com.skills.hub.repository;
 
-    @GetMapping("/delete-pack/{id}")
-    public String deletePack(@PathVariable Long id) {
+import com.skills.hub.model.SkillPack;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-        // STEP 1: call packService.deleteSkillPack(id)
-        // STEP 2: redirect /packs
-
-        return null;
-    }
-
-	public SkillPackService getPackService() {
-		return packService;
-	}
+public interface SkillPackRepository extends JpaRepository<SkillPack, Long> {
 }
