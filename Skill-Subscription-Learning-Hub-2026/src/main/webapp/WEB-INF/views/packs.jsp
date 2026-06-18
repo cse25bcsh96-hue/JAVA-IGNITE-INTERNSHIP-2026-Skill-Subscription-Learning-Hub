@@ -1,68 +1,112 @@
-<!--
-	Why it is used:
+package com.skills.hub.model;
 
-This page shows available training packs / courses / subscription plans.
+import jakarta.persistence.*;
 
-What it does:
-Displays list of courses or packages
-Shows price, duration, features
-Lets user choose a plan
-Why it is needed:
+@Entity
+public class SkillPack {
 
-This is the main business page of your system:
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-It converts users into customers
-Helps users decide what to buy/enroll
-Simple flow:
+    private String title;
+    private String description;
+    private double price;
 
-User - logs in -views packs - selects a plan
--->
-<%@ page contentType="text/html;charset=UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    // Getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-<html>
-<head>
-    <title>Skill Packs</title>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-<body>
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-<div class="header">
-    <img src="/images/logo.png">
-    <h2>Available Skill Packs</h2>
-</div>
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
+}
+package com.skills.hub.repository;
 
-<div class="container">
+import com.skills.hub.model.SkillPack;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    <h3>All Courses</h3>
+public interface SkillPackRepository extends JpaRepository<SkillPack, Long> {
+}
+package com.skills.hub.service;
 
-    <!--  loop skill packs -->
-    <c:forEach var="pack" items="${packs}">
+import com.skills.hub.model.SkillPack;
+import com.skills.hub.repository.SkillPackRepository;
+import org.springframework.stereotype.Service;
 
-        <div class="card">
+import java.util.List;
 
-            <!--  show title -->
-            <h4>${pack.title}</h4>
+@Service
+public class SkillPackServiceImpl implements SkillPackService {
 
-            <!--  show description -->
-            <p>${pack.description}</p>
+    private final SkillPackRepository packRepository;
 
-            <!--  show price -->
-            <b>₹ ${pack.price}</b>
+    public SkillPackServiceImpl(SkillPackRepository packRepository) {
+        this.packRepository = packRepository;
+    }
 
-            <br><br>
+    @Override
+    public SkillPack addSkillPack(SkillPack pack) {
+        return packRepository.save(pack);
+    }
 
-            <!-- subscribe action -->
-            <a href="/subscribe?userId=1&packId=${pack.id}">
-                Subscribe
-            </a>
+    @Override
+    public List<SkillPack> getAllPacks() {
+        return packRepository.findAll();
+    }
 
-        </div>
+    @Override
+    public SkillPack updateSkillPack(SkillPack pack) {
+        return packRepository.save(pack);
+    }
 
-    </c:forEach>
+    @Override
+    public void deleteSkillPack(Long id) {
+        packRepository.deleteById(id);
+    }
+}
+package com.skills.hub.controller;
 
-</div>
+import com.skills.hub.model.SkillPack;
+import com.skills.hub.service.SkillPackService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-</body>
-</html>
+@Controller
+public class SkillPackController {
+
+    private final SkillPackService packService;
+
+    public SkillPackController(SkillPackService packService) {
+        this.packService = packService;
+    }
+
+    @GetMapping("/packs")
+    public String viewPacks(Model model) {
+        model.addAttribute("packs", packService.getAllPacks());
+        return "packs"; // JSP file name
+    }
+
+    @GetMapping("/add-pack")
+    public String showAddPackPage() {
+        return "add-pack"; // JSP file name
+    }
+
+    @PostMapping("/add-pack")
+    public String addPack(@ModelAttribute SkillPack pack) {
+        packService.addSkillPack(pack);
+        return "redirect:/packs";
+    }
+
+    @GetMapping("/delete-pack/{id}")
+    public String deletePack(@PathVariable Long id) {
+        packService.deleteSkillPack(id);
+        return "redirect:/packs";
+    }
+}
