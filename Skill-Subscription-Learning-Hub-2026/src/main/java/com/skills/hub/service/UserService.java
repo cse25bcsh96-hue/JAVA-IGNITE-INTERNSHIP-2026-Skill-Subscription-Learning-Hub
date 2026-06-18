@@ -1,12 +1,27 @@
 package com.skills.hub.service;
 
 import com.skills.hub.model.User;
+import com.skills.hub.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
-public interface UserService {
+@Service
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // Register new user
-    User registerUser(User user);
+    @Override
+    public User registerUser(User user) {
+        return userRepository.save(user);
+    }
 
     // Login user
-    User login(String email, String password);
+    @Override
+    public User login(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
+    }
 }
