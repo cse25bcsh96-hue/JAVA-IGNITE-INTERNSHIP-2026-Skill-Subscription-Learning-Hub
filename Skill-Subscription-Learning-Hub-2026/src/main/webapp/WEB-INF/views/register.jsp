@@ -1,22 +1,3 @@
-<!--
-	Why it is used:
-
-	This is where a new user is created in the system.
-
-	What it does:
-	Collects user details (name, email, password, etc.)
-	Sends data to backend
-	Stores user in database
-	Why it is needed:
-
-	Without registration:
-
-	No new users can join your system
-	Login would be useless
-	Simple flow:
-
-	User - fills form -submits -data saved in DB - account created
--->
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <html>
@@ -28,7 +9,7 @@
 <body>
 
 <div class="header">
-    <img src="/images/logo.png">
+    <img src="/images/logo.png" alt="Logo">
     <h2>Skill Subscription Hub</h2>
 </div>
 
@@ -38,14 +19,14 @@
 
     <form action="/register" method="post">
 
-        <!--  enter name -->
-        <input type="text" name="name" placeholder="Name">
+        <!-- Enter name -->
+        <input type="text" name="name" placeholder="Name" required>
 
-        <!--  enter email -->
-        <input type="text" name="email" placeholder="Email">
+        <!-- Enter email -->
+        <input type="email" name="email" placeholder="Email" required>
 
-        <!--  enter password -->
-        <input type="password" name="password" placeholder="Password">
+        <!-- Enter password -->
+        <input type="password" name="password" placeholder="Password" required>
 
         <button type="submit">Register</button>
 
